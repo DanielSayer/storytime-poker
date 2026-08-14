@@ -1,4 +1,7 @@
-import { convexClient, crossDomainClient } from "@convex-dev/better-auth/client/plugins";
+import {
+  convexClient,
+  crossDomainClient,
+} from "@convex-dev/better-auth/client/plugins";
 import { env } from "@storytime-poker/env/web";
 import { createAuthClient } from "better-auth/react";
 

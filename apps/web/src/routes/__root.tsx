@@ -1,5 +1,9 @@
 import { Toaster } from "@storytime-poker/ui/components/sonner";
-import { HeadContent, Outlet, createRootRouteWithContext } from "@tanstack/react-router";
+import {
+  createRootRouteWithContext,
+  HeadContent,
+  Outlet,
+} from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 
 import Header from "@/components/header";
@@ -7,18 +11,18 @@ import { ThemeProvider } from "@/components/theme-provider";
 
 import "../index.css";
 
-export interface RouterAppContext {}
+export type RouterAppContext = {};
 
 export const Route = createRootRouteWithContext<RouterAppContext>()({
   component: RootComponent,
   head: () => ({
     meta: [
       {
-        title: "storytime-poker",
+        title: "Storytime Poker",
       },
       {
         name: "description",
-        content: "storytime-poker is a web application",
+        content: "Fast, collaborative planning poker for agile teams.",
       },
     ],
     links: [
@@ -40,7 +44,7 @@ function RootComponent() {
         disableTransitionOnChange
         storageKey="vite-ui-theme"
       >
-        <div className="grid grid-rows-[auto_1fr] h-svh">
+        <div className="flex min-h-svh flex-col">
           <Header />
           <Outlet />
         </div>

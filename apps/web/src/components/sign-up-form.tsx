@@ -8,7 +8,11 @@ import z from "zod";
 
 import { authClient } from "@/lib/auth-client";
 
-export default function SignUpForm({ onSwitchToSignIn }: { onSwitchToSignIn: () => void }) {
+export default function SignUpForm({
+  onSwitchToSignIn,
+}: {
+  onSwitchToSignIn: () => void;
+}) {
   const navigate = useNavigate({
     from: "/",
   });
@@ -49,8 +53,8 @@ export default function SignUpForm({ onSwitchToSignIn }: { onSwitchToSignIn: () 
   });
 
   return (
-    <div className="mx-auto w-full mt-10 max-w-md p-6">
-      <h1 className="mb-6 text-center text-3xl font-bold">Create Account</h1>
+    <div className="mx-auto mt-10 w-full max-w-md p-6">
+      <h1 className="mb-6 text-center font-bold text-3xl">Create Account</h1>
 
       <form
         onSubmit={(e) => {
@@ -73,7 +77,10 @@ export default function SignUpForm({ onSwitchToSignIn }: { onSwitchToSignIn: () 
                   onChange={(e) => field.handleChange(e.target.value)}
                 />
                 {field.state.meta.errors.map((error, index) => (
-                  <p key={`${field.name}-error-${index}`} className="text-red-500">
+                  <p
+                    key={`${field.name}-error-${index}`}
+                    className="text-red-500"
+                  >
                     {error?.message}
                   </p>
                 ))}
@@ -96,7 +103,10 @@ export default function SignUpForm({ onSwitchToSignIn }: { onSwitchToSignIn: () 
                   onChange={(e) => field.handleChange(e.target.value)}
                 />
                 {field.state.meta.errors.map((error, index) => (
-                  <p key={`${field.name}-error-${index}`} className="text-red-500">
+                  <p
+                    key={`${field.name}-error-${index}`}
+                    className="text-red-500"
+                  >
                     {error?.message}
                   </p>
                 ))}
@@ -119,7 +129,10 @@ export default function SignUpForm({ onSwitchToSignIn }: { onSwitchToSignIn: () 
                   onChange={(e) => field.handleChange(e.target.value)}
                 />
                 {field.state.meta.errors.map((error, index) => (
-                  <p key={`${field.name}-error-${index}`} className="text-red-500">
+                  <p
+                    key={`${field.name}-error-${index}`}
+                    className="text-red-500"
+                  >
                     {error?.message}
                   </p>
                 ))}
@@ -129,10 +142,17 @@ export default function SignUpForm({ onSwitchToSignIn }: { onSwitchToSignIn: () 
         </div>
 
         <form.Subscribe
-          selector={(state) => ({ canSubmit: state.canSubmit, isSubmitting: state.isSubmitting })}
+          selector={(state) => ({
+            canSubmit: state.canSubmit,
+            isSubmitting: state.isSubmitting,
+          })}
         >
           {({ canSubmit, isSubmitting }) => (
-            <Button type="submit" className="w-full" disabled={!canSubmit || isSubmitting}>
+            <Button
+              type="submit"
+              className="w-full"
+              disabled={!canSubmit || isSubmitting}
+            >
               {isSubmitting ? "Submitting..." : "Sign Up"}
             </Button>
           )}
