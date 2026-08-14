@@ -1,0 +1,3 @@
+{
+  "extends": "@storytime-poker/config/tsconfig.base.json"
+}
