@@ -4,6 +4,7 @@ import { v } from "convex/values";
 export default defineSchema({
   rooms: defineTable({
     code: v.string(),
+    deckId: v.optional(v.string()),
     facilitatorToken: v.string(),
     status: v.union(v.literal("voting"), v.literal("revealed")),
     roundNumber: v.number(),

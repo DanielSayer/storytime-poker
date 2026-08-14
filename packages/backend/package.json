@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@convex-dev/better-auth": "catalog:",
+    "@storytime-poker/domain": "workspace:*",
     "better-auth": "catalog:",
     "convex": "catalog:",
     "dotenv": "catalog:",

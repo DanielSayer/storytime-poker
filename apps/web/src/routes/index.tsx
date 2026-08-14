@@ -7,30 +7,15 @@ import { useMutation } from "convex/react";
 import { ArrowRight, Link2, Sparkles } from "lucide-react";
 import { type FormEvent, useState } from "react";
 
+import {
+  browserRoomIdentityStore,
+  createFacilitatorIdentity,
+  createRoomCode,
+} from "@/features/rooms/room-identity";
+
 export const Route = createFileRoute("/")({
   component: HomeComponent,
 });
-
-const ROOM_CODE_CHARACTERS = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-
-function makeRoomCode() {
-  const bytes = crypto.getRandomValues(new Uint8Array(6));
-  return Array.from(
-    bytes,
-    (byte) => ROOM_CODE_CHARACTERS[byte % ROOM_CODE_CHARACTERS.length],
-  ).join("");
-}
-
-function saveRoomIdentity(
-  code: string,
-  participantToken: string,
-  facilitatorToken?: string,
-) {
-  localStorage.setItem(
-    `storytime-poker:${code}`,
-    JSON.stringify({ participantToken, facilitatorToken }),
-  );
-}
 
 function HomeComponent() {
   const createRoom = useMutation(api.rooms.create);
@@ -47,12 +32,16 @@ function HomeComponent() {
     }
     setError(undefined);
     setIsCreating(true);
-    const participantToken = crypto.randomUUID();
-    const facilitatorToken = crypto.randomUUID();
-    const code = makeRoomCode();
+    const identity = createFacilitatorIdentity();
+    const code = createRoomCode();
     try {
-      await createRoom({ code, name, participantToken, facilitatorToken });
-      saveRoomIdentity(code, participantToken, facilitatorToken);
+      await createRoom({
+        code,
+        name,
+        participantToken: identity.participantToken,
+        facilitatorToken: identity.facilitatorToken,
+      });
+      browserRoomIdentityStore.save(code, identity);
       await navigate({ to: "/room/$code", params: { code } });
     } catch {
       setError("The room could not be created. Please try again.");
