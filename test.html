@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scrum Poker — Games Night</title>
+  <style>
+    :root {
+      --bg: #f6e7c8;
+      --text: #4a3520;
+      --accent: #e2632e;
+      --accent-contrast: #fff8ec;
+      --danger: #c0392b;
+      --card-bg: #fff6e3;
+      --table-bg: radial-gradient(circle, #7fae6e 0%, #649556 70%);
+      --deck-bg: repeating-linear-gradient(45deg, #e2632e 0 8px, #d1521f 8px 16px);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { min-height: 100vh; background: var(--bg); color: var(--text); font-family: "Trebuchet MS", "Comic Sans MS", cursive; }
+    .status-bar, .panel { border: 2px solid var(--text); background: var(--card-bg); box-shadow: 5px 5px 0 rgb(74 53 32 / 35%); }
+    .status-bar { display: grid; grid-template-columns: 1.25fr repeat(4, 1fr); width: min(1180px, 94vw); margin: 18px auto 0; border-radius: 20px 26px 18px 24px; overflow: hidden; }
+    .stat { min-width: 0; padding: 10px 18px; border-right: 2px solid var(--text); }
+    .stat:last-child { border-right: 0; }
+    .k { font-size: 10px; letter-spacing: 1.1px; opacity: .6; text-transform: uppercase; }
+    .v { margin-top: 2px; font-size: 19px; font-weight: 700; white-space: nowrap; }
+    .v em, .chip b { color: var(--accent); font-style: normal; }
+
+    .workspace { display: flex; align-items: stretch; gap: 24px; width: min(1180px, 94vw); margin: 0 auto 24px; }
+    .arena { display: grid; flex: 1; min-width: 0; padding: 16px 0 0; place-items: center; }
+    .table-wrap { position: relative; width: min(850px, 100%); height: 600px; }
+    .table { position: absolute; inset: 115px 58px; display: grid; border: 10px solid #8a5a33; border-radius: 50%; background: var(--table-bg); box-shadow: 8px 8px 0 rgb(74 53 32 / 30%), inset 0 0 0 6px rgb(255 255 255 / 15%); place-items: center; }
+    .felt-label { text-align: center; opacity: .85; }
+    .story { font-size: 13px; letter-spacing: 1px; opacity: .7; text-transform: uppercase; }
+    .name { margin-top: 4px; font-size: 20px; font-weight: 700; }
+    .deck, .pcard { display: grid; border: 2px solid var(--text); background: var(--deck-bg); color: #fff3dd; box-shadow: 3px 3px 0 rgb(74 53 32 / 40%); place-items: center; }
+    .deck { width: 64px; height: 88px; margin: 14px auto 0; border-radius: 8px; font-size: 26px; }
+    .seat { position: absolute; width: 150px; transform: translate(-50%, -50%); text-align: center; }
+    .s1 { top: 6%; left: 50%; } .s2 { top: 26%; left: 88%; } .s3 { top: 74%; left: 88%; }
+    .s4 { top: 94%; left: 50%; } .s5 { top: 74%; left: 12%; } .s6 { top: 26%; left: 12%; }
+    .avatar { position: relative; display: grid; width: 56px; height: 56px; margin: 0 auto; border: 3px solid var(--text); border-radius: 46% 54% 52% 48%; background: #ffd9a0; box-shadow: 3px 3px 0 rgb(74 53 32 / 35%); color: var(--text); font-size: 18px; font-weight: 700; place-items: center; }
+    .dot { position: absolute; right: -2px; bottom: -2px; width: 14px; height: 14px; border: 2px solid var(--bg); border-radius: 50%; }
+    .on { background: #2ecc71; } .idle { background: #f1c40f; } .off { background: #95a5a6; }
+    .pname { margin-top: 8px; font-size: 13px; font-weight: 600; } .prole { font-size: 10px; letter-spacing: 1px; opacity: .55; text-transform: uppercase; }
+    .pcard { width: 44px; height: 62px; margin: 10px auto 0; border-radius: 7px; font-size: 16px; transform: rotate(var(--tilt)); transition: transform .3s; }
+    .pcard:hover { transform: rotate(0) translateY(-6px); }
+    .voted-badge { display: inline-block; margin-top: 8px; padding: 3px 10px; border-radius: 20px; background: var(--text); color: #ffe9c4; font-size: 10px; font-weight: 600; letter-spacing: .5px; }
+
+    .panel { align-self: center; flex: 0 0 272px; margin: 16px 0 0; padding: 20px; border-radius: 20px 26px 18px 24px; }
+    .panel h2 { margin-bottom: 14px; font-size: 14px; letter-spacing: 1.5px; opacity: .7; text-transform: uppercase; }
+    .controls, .queue { display: flex; flex-direction: column; gap: 10px; } .queue { margin-top: 18px; }
+    .btn { width: 100%; border: none; border-radius: 14px 18px 12px 20px; cursor: pointer; padding: 12px 16px; font: 700 14px "Trebuchet MS", "Comic Sans MS", cursive; transition: all .2s; }
+    .btn:hover { box-shadow: 5px 5px 0 var(--text); transform: translate(-1px, -1px); }
+    .primary { background: var(--accent); color: var(--accent-contrast); box-shadow: 3px 3px 0 var(--text); }
+    .ghost { border: 2px solid var(--text); background: transparent; color: var(--text); } .danger { background: var(--danger); color: white; }
+    .chip { border: 2px solid var(--text); border-radius: 20px; background: white; padding: 7px 12px; font-size: 12px; line-height: 1.3; }
+    @media (max-width: 900px) { .workspace { display: block; } .panel { width: 100%; margin: 0; } .controls, .queue { flex-direction: row; flex-wrap: wrap; } .btn { width: auto; } }
+    @media (max-width: 600px) { .status-bar { grid-template-columns: repeat(2, 1fr); } .stat { border-bottom: 2px solid var(--text); } .stat:nth-child(2n) { border-right: 0; } .stat:last-child { border-bottom: 0; } .table-wrap { height: 580px; } .table { inset: 145px 12px; } .seat { width: 105px; } .s1 { top: 5%; } .s2 { top: 27%; left: 84%; } .s3 { top: 73%; left: 84%; } .s4 { top: 95%; } .s5 { top: 73%; left: 16%; } .s6 { top: 27%; left: 16%; } .name { font-size: 15px; } }
+  </style>
+</head>
+<body>
+  <section class="status-bar" aria-label="Session status">
+    <div class="stat"><div class="k">Session</div><div class="v">SPRINT-42</div></div><div class="stat"><div class="k">Round</div><div class="v">3 <em>/ 8</em></div></div><div class="stat"><div class="k">Votes In</div><div class="v"><em>5</em> / 6</div></div><div class="stat"><div class="k">Timer</div><div class="v">01:47</div></div><div class="stat"><div class="k">Deck</div><div class="v">Fibonacci</div></div>
+  </section>
+  <div class="workspace">
+  <main class="arena"><div class="table-wrap"><div class="table"><div class="felt-label"><div class="story">Now Estimating</div><div class="name">PROJ-218 · Checkout retry logic</div><div class="deck">?</div></div></div>
+    <div class="seat s1"><div class="avatar">AK<span class="dot on"></span></div><div class="pname">Ava Kim</div><div class="prole">Moderator</div><div class="pcard" style="--tilt:-4deg">?</div><span class="voted-badge">VOTED</span></div>
+    <div class="seat s2"><div class="avatar">JM<span class="dot on"></span></div><div class="pname">Jonas Meyer</div><div class="prole">Developer</div><div class="pcard" style="--tilt:6deg">?</div><span class="voted-badge">VOTED</span></div>
+    <div class="seat s3"><div class="avatar">PS<span class="dot idle"></span></div><div class="pname">Priya Shah</div><div class="prole">QA Lead</div><div class="pcard" style="--tilt:-7deg">?</div><span class="voted-badge">VOTED</span></div>
+    <div class="seat s4"><div class="avatar">LO<span class="dot on"></span></div><div class="pname">Leo Ortiz</div><div class="prole">Developer</div><div class="pcard" style="--tilt:5deg">?</div><span class="voted-badge">VOTED</span></div>
+    <div class="seat s5"><div class="avatar">MN<span class="dot off"></span></div><div class="pname">Mara Novak</div><div class="prole">Designer</div><div class="pcard" style="--tilt:-6deg">?</div><span class="voted-badge">VOTED</span></div>
+    <div class="seat s6"><div class="avatar">TC<span class="dot idle"></span></div><div class="pname">Tom Chen</div><div class="prole">Product Owner</div><div class="pcard" style="--tilt:8deg">?</div><span class="voted-badge" style="opacity:.45">THINKING…</span></div>
+  </div></main>
+  <section class="panel"><h2>Admin Controls</h2><div class="controls"><button class="btn primary">Reveal Cards</button><button class="btn ghost">Reset Round</button><button class="btn ghost">Skip Story</button><button class="btn danger">End Session</button></div><div class="queue"><span class="chip">Up next: <b>PROJ-221</b> Refund webhook retries</span><span class="chip"><b>PROJ-224</b> Cart expiry job</span><span class="chip"><b>PROJ-230</b> Pricing banner A/B</span></div></section>
+  </div>
+</body>
+</html>

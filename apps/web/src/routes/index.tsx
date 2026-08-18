@@ -99,6 +99,7 @@ function HomeComponent() {
               <Button
                 className="h-11 w-full rounded-lg text-sm"
                 disabled={isCreating}
+                type="submit"
               >
                 {isCreating ? "Creating room…" : "Create room"}
                 {isCreating ? null : <ArrowRight />}

@@ -1,13 +1,10 @@
-import { getDeck } from "@storytime-poker/domain";
-import { Button } from "@storytime-poker/ui/components/button";
-import { Clipboard } from "lucide-react";
+import { getDeck, summarizeVotes } from "@storytime-poker/domain";
 import { toast } from "sonner";
 
-import { CardDeck } from "./card-deck";
-import { ParticipantsPanel } from "./participants-panel";
-import { RevealedVotes } from "./revealed-votes";
+import { PokerTable } from "./poker-table";
+import { RoomSidePanel } from "./room-side-panel";
 import type { RoomView } from "./room-types";
-import { RoundLabel } from "./round-label";
+import { formatVoteSummary } from "./room-types";
 
 type PokerRoomProps = {
   room: RoomView;
@@ -16,6 +13,13 @@ type PokerRoomProps = {
   onNextRound(): Promise<void>;
   onSaveRoundLabel(label: string): Promise<void>;
 };
+
+const statusCellClass =
+  "min-w-0 border-foreground border-r-2 bg-transparent px-[18px] py-2.5 text-left last:border-r-0";
+const statusLabelClass =
+  "block text-[10px] uppercase tracking-[1.1px] opacity-60";
+const statusValueClass =
+  "mt-0.5 block overflow-hidden text-ellipsis whitespace-nowrap font-bold text-[19px]";
 
 function actionError(action: string) {
   return `${action} didn't work. Please try again.`;
@@ -30,6 +34,15 @@ export function PokerRoom({
 }: PokerRoomProps) {
   const isVoting = room.status === "voting";
   const deck = getDeck(room.deckId);
+  const votedCount = room.participants.filter(
+    (participant) => participant.hasVoted,
+  ).length;
+  const revealedVotes = room.participants.flatMap((participant) =>
+    participant.vote ? [participant.vote] : [],
+  );
+  const summary = isVoting
+    ? undefined
+    : formatVoteSummary(summarizeVotes(revealedVotes));
 
   async function copyRoomLink() {
     try {
@@ -60,11 +73,12 @@ export function PokerRoom({
     }
   }
 
-  async function nextRound() {
+  async function resetRound() {
     try {
       await onNextRound();
+      toast.success("A fresh round is ready");
     } catch {
-      toast.error(actionError("Starting a new round"));
+      toast.error(actionError("Resetting the round"));
     }
   }
 
@@ -77,55 +91,72 @@ export function PokerRoom({
     }
   }
 
+  function showMockedAction(action: "skip" | "end") {
+    toast.info(
+      action === "skip"
+        ? "Story queues are not connected yet."
+        : "Ending a session is not connected yet.",
+    );
+  }
+
   return (
-    <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-6 sm:px-6 sm:py-8">
-      <div className="mb-8 flex flex-col gap-4 border-b pb-6 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <div className="flex items-center gap-2">
-            <h1 className="font-semibold text-2xl tracking-tight">
-              Round {room.roundNumber}
-            </h1>
-            <span className="rounded-full bg-muted px-2.5 py-1 text-muted-foreground text-xs">
-              {isVoting ? "Voting open" : "Revealed"}
-            </span>
-          </div>
-          <p className="mt-1 text-muted-foreground text-sm">Room {room.code}</p>
-        </div>
-        <Button
-          className="h-10 rounded-lg"
-          variant="outline"
+    <main className="min-w-0 flex-1 overflow-x-auto bg-background font-[Trebuchet_MS,Comic_Sans_MS,cursive] text-foreground">
+      <section
+        className="mx-auto mt-[18px] grid w-[calc(100vw-2rem)] min-w-[1040px] max-w-[1180px] grid-cols-[1.25fr_repeat(4,1fr)] overflow-hidden rounded-[20px_26px_18px_24px] border-2 border-foreground bg-card shadow-[5px_5px_0_rgb(74_53_32_/_35%)] dark:shadow-[5px_5px_0_rgb(0_0_0_/_35%)]"
+        aria-label="Session status"
+      >
+        <button
+          className={`${statusCellClass} cursor-pointer font-[inherit] text-foreground hover:bg-primary/10 focus-visible:bg-primary/10 focus-visible:outline-3 focus-visible:outline-primary/35 focus-visible:-outline-offset-3`}
+          title="Copy room link"
+          type="button"
           onClick={copyRoomLink}
         >
-          <Clipboard /> Share room
-        </Button>
-      </div>
+          <span className={statusLabelClass}>Session</span>
+          <strong className={statusValueClass}>{room.code}</strong>
+        </button>
+        <div className={statusCellClass}>
+          <span className={statusLabelClass}>Round</span>
+          <strong className={statusValueClass}>{room.roundNumber}</strong>
+        </div>
+        <div className={statusCellClass}>
+          <span className={statusLabelClass}>Votes in</span>
+          <strong className={statusValueClass}>
+            <em className="text-primary not-italic">{votedCount}</em> /{" "}
+            {room.participants.length}
+          </strong>
+        </div>
+        <div className={statusCellClass}>
+          <span className={statusLabelClass}>Timer</span>
+          <strong className={statusValueClass} title="Timer not available">
+            <span aria-hidden="true">—</span>
+            <span className="sr-only">Not available</span>
+          </strong>
+        </div>
+        <div className={statusCellClass}>
+          <span className={statusLabelClass}>Deck</span>
+          <strong className={statusValueClass}>{deck.label}</strong>
+        </div>
+      </section>
 
-      <div className="grid gap-8 lg:grid-cols-[1fr_18rem]">
-        <section className="min-w-0">
-          <RoundLabel
-            label={room.roundLabel}
-            canEdit={room.isFacilitator && isVoting}
-            onSave={saveRoundLabel}
-          />
-          {isVoting ? (
-            <CardDeck
-              cards={deck.cards}
-              selectedCard={room.currentVote}
-              onSelect={vote}
-            />
-          ) : (
-            <RevealedVotes
-              participants={room.participants}
-              isFacilitator={room.isFacilitator}
-              onNextRound={nextRound}
-            />
-          )}
-        </section>
-        <ParticipantsPanel
+      <div className="mx-auto mb-6 flex w-[calc(100vw-2rem)] min-w-[1040px] max-w-[1180px] items-start gap-6">
+        <PokerTable
           participants={room.participants}
+          isVoting={isVoting}
+          roundLabel={room.roundLabel}
+          canEditRoundLabel={room.isFacilitator && isVoting}
+          summary={summary}
+          onSaveRoundLabel={saveRoundLabel}
+        />
+        <RoomSidePanel
+          cards={deck.cards}
+          selectedCard={room.currentVote}
           isFacilitator={room.isFacilitator}
           isVoting={isVoting}
+          canReveal={isVoting && votedCount > 0}
+          onVote={vote}
           onReveal={reveal}
+          onResetRound={resetRound}
+          onMockAction={showMockedAction}
         />
       </div>
     </main>

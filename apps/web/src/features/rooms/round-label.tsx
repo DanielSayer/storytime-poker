@@ -1,6 +1,4 @@
 import { ROOM_LIMITS } from "@storytime-poker/domain";
-import { Button } from "@storytime-poker/ui/components/button";
-import { Input } from "@storytime-poker/ui/components/input";
 import { useEffect, useState } from "react";
 
 type RoundLabelProps = {
@@ -18,14 +16,16 @@ export function RoundLabel({ label, canEdit, onSave }: RoundLabelProps) {
   }, [label]);
 
   if (!canEdit) {
-    return label ? (
-      <div className="mb-8 rounded-xl border bg-card p-4">
-        <p className="font-medium text-muted-foreground text-xs uppercase tracking-wide">
-          This round
-        </p>
-        <p className="mt-1 font-medium">{label}</p>
+    return (
+      <div>
+        <span className="block text-[11px] uppercase tracking-[1px] opacity-70">
+          Now estimating
+        </span>
+        <strong className="mt-1 block font-bold text-xl leading-[1.2] [overflow-wrap:anywhere]">
+          {label || "No story selected"}
+        </strong>
       </div>
-    ) : null;
+    );
   }
 
   async function handleSave() {
@@ -38,27 +38,33 @@ export function RoundLabel({ label, canEdit, onSave }: RoundLabelProps) {
   }
 
   return (
-    <div className="mb-8 rounded-xl border bg-card p-4">
-      <label className="font-medium text-sm" htmlFor="round-label">
-        Optional round label
+    <div>
+      <label
+        className="block text-[11px] uppercase tracking-[1px] opacity-70"
+        htmlFor="round-label"
+      >
+        Now estimating{" "}
+        <span className="text-[9px] normal-case tracking-normal">
+          (optional)
+        </span>
       </label>
-      <div className="mt-2 flex gap-2">
-        <Input
-          className="h-10 rounded-lg"
+      <div className="mt-1.5 flex justify-center gap-1.5">
+        <input
+          className="min-w-0 rounded-[10px_12px_9px_13px] border-2 border-foreground bg-card/85 px-2.5 py-2 font-semibold text-foreground text-xs outline-none placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-primary/40"
           id="round-label"
           maxLength={ROOM_LIMITS.labelLength}
           placeholder="e.g. PROJ-123 - Export reports"
           value={draft}
           onChange={(event) => setDraft(event.target.value)}
         />
-        <Button
-          className="h-10 rounded-lg"
-          variant="secondary"
+        <button
+          className="cursor-pointer rounded-[9px_12px_10px_8px] border-2 border-foreground bg-card px-2.5 py-1.5 font-bold text-[11px] text-foreground hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 disabled:cursor-wait disabled:opacity-60"
           disabled={isSaving}
+          type="button"
           onClick={handleSave}
         >
-          Save
-        </Button>
+          {isSaving ? "Saving…" : "Save"}
+        </button>
       </div>
     </div>
   );

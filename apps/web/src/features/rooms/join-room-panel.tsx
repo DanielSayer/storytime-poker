@@ -53,6 +53,7 @@ export function JoinRoomPanel({ code, onJoin }: JoinRoomPanelProps) {
           <Button
             className="h-11 w-full rounded-lg text-sm"
             disabled={isJoining}
+            type="submit"
           >
             {isJoining ? "Joining..." : "Join room"}
           </Button>

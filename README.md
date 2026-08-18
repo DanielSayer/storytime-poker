@@ -91,3 +91,17 @@ storytime-poker/
 - `pnpm run dev:setup`: Setup and configure your Convex project
 - `pnpm run check-types`: Check TypeScript types across all apps
 - `pnpm run check`: Run Biome formatting and linting
+
+## UI-only follow-ups
+
+The desktop room design currently includes a few planned features that are not
+yet backed by room data or mutations:
+
+- [ ] Add a session timer/countdown.
+- [ ] Track participant online, idle, and offline presence.
+- [ ] Persist a story queue and advance it through **Skip story**.
+- [ ] Add an **End session** lifecycle and completed-session state.
+- [ ] Add an optional planned round total for the session status bar.
+
+Until those are implemented, the timer is shown as unavailable, presence dots
+are neutral, and the admin story queue is explicitly labelled as an example.
