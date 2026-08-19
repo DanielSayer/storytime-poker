@@ -1,7 +1,10 @@
+import { ROOM_LIMITS } from "@storytime-poker/domain";
 import { Button } from "@storytime-poker/ui/components/button";
 import { Input } from "@storytime-poker/ui/components/input";
 import { Users } from "lucide-react";
 import { type FormEvent, useState } from "react";
+
+import { RoomCapacityError } from "./room-errors";
 
 type JoinRoomPanelProps = {
   code: string;
@@ -23,8 +26,12 @@ export function JoinRoomPanel({ code, onJoin }: JoinRoomPanelProps) {
     setIsJoining(true);
     try {
       await onJoin(name);
-    } catch {
-      setError("You couldn't join with that name. Try a different name.");
+    } catch (joinError) {
+      setError(
+        joinError instanceof RoomCapacityError
+          ? `This room is full. Rooms can have up to ${ROOM_LIMITS.participants} people.`
+          : "You couldn't join with that name. Try a different name.",
+      );
       setIsJoining(false);
     }
   }
@@ -43,7 +50,7 @@ export function JoinRoomPanel({ code, onJoin }: JoinRoomPanelProps) {
         <form className="mt-6 space-y-4" onSubmit={handleSubmit}>
           <Input
             className="h-11 rounded-lg px-3 text-base md:text-base"
-            maxLength={30}
+            maxLength={ROOM_LIMITS.nameLength}
             placeholder="Your name"
             value={name}
             onChange={(event) => setName(event.target.value)}

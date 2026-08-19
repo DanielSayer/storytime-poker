@@ -2,7 +2,11 @@ export const ROOM_LIMITS = {
   codeLength: 6,
   labelLength: 120,
   nameLength: 30,
-  participants: 30,
+  participants: 16,
+} as const;
+
+export const ROOM_ERROR_CODES = {
+  full: "ROOM_FULL",
 } as const;
 
 export const ROOM_CODE_CHARACTERS = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";

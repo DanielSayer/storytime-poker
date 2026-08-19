@@ -5,6 +5,7 @@ import {
   normalizeParticipantName,
   normalizeRoomCode,
   normalizeRoundLabel,
+  ROOM_ERROR_CODES,
   ROOM_LIMITS,
 } from "@storytime-poker/domain";
 import { ConvexError, v } from "convex/values";
@@ -98,7 +99,7 @@ export const join = mutation({
     const name = validName(args.name);
     const participants = await listParticipants(ctx, room._id);
     if (participants.length >= ROOM_LIMITS.participants) {
-      throw new ConvexError("This room is full.");
+      throw new ConvexError({ code: ROOM_ERROR_CODES.full });
     }
     if (
       participants.some(

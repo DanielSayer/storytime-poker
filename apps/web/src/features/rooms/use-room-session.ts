@@ -1,14 +1,28 @@
 import { api } from "@storytime-poker/backend/convex/_generated/api";
-import { normalizeRoomCode } from "@storytime-poker/domain";
+import { normalizeRoomCode, ROOM_ERROR_CODES } from "@storytime-poker/domain";
 import { useMutation, useQuery } from "convex/react";
+import { ConvexError } from "convex/values";
 import { useEffect, useState } from "react";
-
+import { RoomCapacityError } from "./room-errors";
 import {
   browserRoomIdentityStore,
   createParticipantIdentity,
   type RoomIdentity,
   type RoomIdentityStore,
 } from "./room-identity";
+
+function isRoomCapacityError(error: unknown) {
+  if (!(error instanceof ConvexError)) {
+    return false;
+  }
+  const data = error.data;
+  return (
+    typeof data === "object" &&
+    data !== null &&
+    "code" in data &&
+    data.code === ROOM_ERROR_CODES.full
+  );
+}
 
 export function useRoomSession(
   routeCode: string,
@@ -39,11 +53,18 @@ export function useRoomSession(
 
   async function join(name: string) {
     const nextIdentity = createParticipantIdentity();
-    await joinRoom({
-      code,
-      name,
-      participantToken: nextIdentity.participantToken,
-    });
+    try {
+      await joinRoom({
+        code,
+        name,
+        participantToken: nextIdentity.participantToken,
+      });
+    } catch (error) {
+      if (isRoomCapacityError(error)) {
+        throw new RoomCapacityError();
+      }
+      throw error;
+    }
     identityStore.save(code, nextIdentity);
     setStoredIdentity({ code, identity: nextIdentity });
   }
