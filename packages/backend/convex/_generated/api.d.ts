@@ -14,6 +14,7 @@ import type * as http from "../http.js";
 import type * as privateData from "../privateData.js";
 import type * as roomModel from "../roomModel.js";
 import type * as rooms from "../rooms.js";
+import type * as stories from "../stories.js";
 
 import type {
   ApiFromModules,
@@ -28,6 +29,7 @@ declare const fullApi: ApiFromModules<{
   privateData: typeof privateData;
   roomModel: typeof roomModel;
   rooms: typeof rooms;
+  stories: typeof stories;
 }>;
 
 /**

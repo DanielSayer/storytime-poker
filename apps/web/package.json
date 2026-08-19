@@ -11,6 +11,7 @@
     "check-types": "vite build && tsc --noEmit"
   },
   "dependencies": {
+    "@azure/msal-browser": "^5.18.0",
     "@convex-dev/better-auth": "catalog:",
     "@hookform/resolvers": "^5.5.7",
     "@storytime-poker/backend": "workspace:*",
@@ -22,6 +23,7 @@
     "@tanstack/react-router": "^1.170.18",
     "better-auth": "catalog:",
     "convex": "catalog:",
+    "dompurify": "^3.4.13",
     "dotenv": "catalog:",
     "lucide-react": "catalog:",
     "next-themes": "catalog:",

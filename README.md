@@ -33,6 +33,24 @@ Follow the prompts to create a new Convex project and connect it to your applica
 
 Copy environment variables from `packages/backend/.env.local` to `apps/*/.env`.
 
+### Azure DevOps work items
+
+To show work-item titles and descriptions, register a single-page application
+in Microsoft Entra ID and add the Azure DevOps delegated `vso.work` permission.
+Add the app's dedicated callback as a SPA redirect URI. Use
+`http://localhost:3001/redirect.html` for local development and
+`https://your-production-host/redirect.html` in production. Then set these
+variables in the web app environment:
+
+```env
+VITE_AZURE_DEVOPS_CLIENT_ID=your-application-client-id
+VITE_AZURE_DEVOPS_TENANT_ID=your-directory-tenant-id
+```
+
+Storytime Poker stores only canonical work-item links in Convex. Each browser
+uses its own Azure DevOps permissions, keeps its access token in
+`sessionStorage`, and holds fetched titles and descriptions in memory.
+
 Then, run the development server:
 
 ```bash

@@ -50,6 +50,8 @@ function RoomRoute() {
       onReveal={session.reveal}
       onNextRound={session.nextRound}
       onSaveRoundLabel={session.saveRoundLabel}
+      onSelectStory={session.selectStory}
+      storyLinks={session.storyLinks}
     />
   );
 }

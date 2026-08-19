@@ -50,6 +50,13 @@ export function useRoomSession(
   const revealVotes = useMutation(api.rooms.reveal);
   const startNextRound = useMutation(api.rooms.startNextRound);
   const updateRoundLabel = useMutation(api.rooms.updateRoundLabel);
+  const selectStoryMutation = useMutation(api.stories.select);
+  const storyLinks = useQuery(
+    api.stories.list,
+    identity && room?.isJoined
+      ? { code, participantToken: identity.participantToken }
+      : "skip",
+  );
 
   async function join(name: string) {
     const nextIdentity = createParticipantIdentity();
@@ -105,15 +112,28 @@ export function useRoomSession(
     });
   }
 
+  async function selectStory(url: string) {
+    if (!identity?.facilitatorToken) {
+      return;
+    }
+    await selectStoryMutation({
+      code,
+      facilitatorToken: identity.facilitatorToken,
+      url,
+    });
+  }
+
   return {
     code,
     identityLoaded,
     room,
+    storyLinks,
     join,
     vote,
     reveal,
     nextRound,
     saveRoundLabel,
+    selectStory,
   };
 }
 

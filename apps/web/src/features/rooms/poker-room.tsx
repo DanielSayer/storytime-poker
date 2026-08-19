@@ -1,4 +1,8 @@
-import { getDeck, summarizeVotes } from "@storytime-poker/domain";
+import {
+  getDeck,
+  parseAzureDevOpsWorkItemUrl,
+  summarizeVotes,
+} from "@storytime-poker/domain";
 import { toast } from "sonner";
 
 import { PokerTable } from "./poker-table";
@@ -12,6 +16,8 @@ type PokerRoomProps = {
   onReveal(): Promise<void>;
   onNextRound(): Promise<void>;
   onSaveRoundLabel(label: string): Promise<void>;
+  onSelectStory(url: string): Promise<void>;
+  storyLinks?: string[];
 };
 
 const statusCellClass =
@@ -31,6 +37,8 @@ export function PokerRoom({
   onReveal,
   onNextRound,
   onSaveRoundLabel,
+  onSelectStory,
+  storyLinks,
 }: PokerRoomProps) {
   const isVoting = room.status === "voting";
   const deck = getDeck(room.deckId);
@@ -43,6 +51,10 @@ export function PokerRoom({
   const summary = isVoting
     ? undefined
     : formatVoteSummary(summarizeVotes(revealedVotes));
+  const currentStoryUrl = storyLinks?.[0];
+  const currentStory = currentStoryUrl
+    ? parseAzureDevOpsWorkItemUrl(currentStoryUrl)
+    : undefined;
 
   async function copyRoomLink() {
     try {
@@ -88,6 +100,21 @@ export function PokerRoom({
       toast.success(label.trim() ? "Round label saved" : "Round label removed");
     } catch {
       toast.error(actionError("Saving the label"));
+    }
+  }
+
+  async function selectStory(url: string) {
+    if (!parseAzureDevOpsWorkItemUrl(url)) {
+      toast.error("Paste a valid Azure DevOps work item link.");
+      return false;
+    }
+    try {
+      await onSelectStory(url);
+      toast.success("Story selected. A fresh round is ready.");
+      return true;
+    } catch {
+      toast.error("That Azure DevOps story could not be selected.");
+      return false;
     }
   }
 
@@ -143,6 +170,7 @@ export function PokerRoom({
           participants={room.participants}
           isVoting={isVoting}
           roundLabel={room.roundLabel}
+          story={currentStory}
           canEditRoundLabel={room.isFacilitator && isVoting}
           summary={summary}
           onSaveRoundLabel={saveRoundLabel}
@@ -156,6 +184,8 @@ export function PokerRoom({
           onVote={vote}
           onReveal={reveal}
           onResetRound={resetRound}
+          onSelectStory={selectStory}
+          storyLinks={storyLinks ?? []}
           onMockAction={showMockedAction}
         />
       </div>

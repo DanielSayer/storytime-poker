@@ -3,6 +3,7 @@ import type { CSSProperties } from "react";
 
 import type { RoomParticipant } from "./room-types";
 import { RoundLabel } from "./round-label";
+import { TicketDetails } from "./ticket-details";
 
 const STAGE_WIDTH = 760;
 const BASE_STAGE_HEIGHT = 700;
@@ -16,6 +17,10 @@ type PokerTableProps = {
   participants: RoomParticipant[];
   isVoting: boolean;
   roundLabel?: string;
+  story?: {
+    id: number;
+    url: string;
+  };
   canEditRoundLabel: boolean;
   summary?: string;
   onSaveRoundLabel(label: string): Promise<void>;
@@ -116,6 +121,7 @@ export function PokerTable({
   participants,
   isVoting,
   roundLabel,
+  story,
   canEditRoundLabel,
   summary,
   onSaveRoundLabel,
@@ -148,14 +154,19 @@ export function PokerTable({
           data-poker-table
         >
           <div className="w-[min(320px,70%)] text-center">
-            <RoundLabel
-              label={roundLabel}
-              canEdit={canEditRoundLabel}
-              onSave={onSaveRoundLabel}
-            />
+            {story ? (
+              <TicketDetails id={String(story.id)} url={story.url} />
+            ) : (
+              <RoundLabel
+                label={roundLabel}
+                canEdit={canEditRoundLabel}
+                onSave={onSaveRoundLabel}
+              />
+            )}
             <div
               className={cn(
-                "mx-auto mt-3.5 grid h-[88px] w-16 place-items-center rounded-lg border-2 border-foreground text-[26px] shadow-[3px_3px_0_rgb(74_53_32_/_40%)] dark:shadow-[3px_3px_0_rgb(0_0_0_/_40%)]",
+                "mx-auto grid h-[88px] w-16 place-items-center rounded-lg border-2 border-foreground text-[26px] shadow-[3px_3px_0_rgb(74_53_32_/_40%)] dark:shadow-[3px_3px_0_rgb(0_0_0_/_40%)]",
+                story ? "mt-2" : "mt-3.5",
                 deckPatternClass,
               )}
               aria-hidden="true"

@@ -45,9 +45,9 @@ export function JoinRoomPanel({ code, onJoin }: JoinRoomPanelProps) {
         <p className="font-medium text-muted-foreground text-sm">Room {code}</p>
         <h1 className="mt-1 font-semibold text-2xl">Join the vote</h1>
         <p className="mt-2 text-muted-foreground text-sm">
-          Enter the name your team will recognise.
+          Enter a name your team will recognise.
         </p>
-        <form className="mt-6 space-y-4" onSubmit={handleSubmit}>
+        <form className="mt-4 space-y-4" onSubmit={handleSubmit}>
           <Input
             className="h-11 rounded-lg px-3 text-base md:text-base"
             maxLength={ROOM_LIMITS.nameLength}
@@ -56,7 +56,9 @@ export function JoinRoomPanel({ code, onJoin }: JoinRoomPanelProps) {
             onChange={(event) => setName(event.target.value)}
             autoFocus
           />
-          {error ? <p className="text-destructive text-sm">{error}</p> : null}
+          {error ? (
+            <p className="-mt-2 text-destructive text-sm">{error}</p>
+          ) : null}
           <Button
             className="h-11 w-full rounded-lg text-sm"
             disabled={isJoining}

@@ -9,6 +9,7 @@ export default defineSchema({
     status: v.union(v.literal("voting"), v.literal("revealed")),
     roundNumber: v.number(),
     roundLabel: v.optional(v.string()),
+    storyLinks: v.optional(v.array(v.string())),
     createdAt: v.number(),
     updatedAt: v.number(),
   }).index("by_code", ["code"]),

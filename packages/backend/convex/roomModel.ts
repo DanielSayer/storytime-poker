@@ -13,7 +13,7 @@ export async function findRoomByCode(ctx: RoomReader, code: string) {
     .unique();
 }
 
-export async function requireRoom(ctx: MutationCtx, code: string) {
+export async function requireRoom(ctx: RoomReader, code: string) {
   const room = await findRoomByCode(ctx, code);
   if (!room) {
     throw new ConvexError("This room could not be found.");
@@ -42,7 +42,7 @@ export async function findParticipant(
 }
 
 export async function requireParticipant(
-  ctx: MutationCtx,
+  ctx: RoomReader,
   roomId: Id<"rooms">,
   participantToken: string,
 ) {

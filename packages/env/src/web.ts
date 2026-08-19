@@ -11,6 +11,8 @@ export const env = createEnv({
   client: {
     VITE_CONVEX_URL: convexUrlSchema("example.convex.cloud"),
     VITE_CONVEX_SITE_URL: convexUrlSchema("example.convex.site"),
+    VITE_AZURE_DEVOPS_CLIENT_ID: z.string().min(1).optional(),
+    VITE_AZURE_DEVOPS_TENANT_ID: z.string().min(1).optional(),
   },
   runtimeEnv: (import.meta as any).env,
   skipValidation: !!process.env.SKIP_ENV_VALIDATION,

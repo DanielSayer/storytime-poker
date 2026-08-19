@@ -3,11 +3,17 @@ import { useEffect, useState } from "react";
 
 type RoundLabelProps = {
   label?: string;
+  fallbackLabel?: string;
   canEdit: boolean;
   onSave(label: string): Promise<void>;
 };
 
-export function RoundLabel({ label, canEdit, onSave }: RoundLabelProps) {
+export function RoundLabel({
+  label,
+  fallbackLabel,
+  canEdit,
+  onSave,
+}: RoundLabelProps) {
   const [draft, setDraft] = useState(label ?? "");
   const [isSaving, setIsSaving] = useState(false);
 
@@ -22,7 +28,7 @@ export function RoundLabel({ label, canEdit, onSave }: RoundLabelProps) {
           Now estimating
         </span>
         <strong className="mt-1 block font-bold text-xl leading-[1.2] [overflow-wrap:anywhere]">
-          {label || "No story selected"}
+          {label || fallbackLabel || "No story selected"}
         </strong>
       </div>
     );
@@ -53,7 +59,7 @@ export function RoundLabel({ label, canEdit, onSave }: RoundLabelProps) {
           className="min-w-0 rounded-[10px_12px_9px_13px] border-2 border-foreground bg-card/85 px-2.5 py-2 font-semibold text-foreground text-xs outline-none placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-primary/40"
           id="round-label"
           maxLength={ROOM_LIMITS.labelLength}
-          placeholder="e.g. PROJ-123 - Export reports"
+          placeholder={fallbackLabel ?? "e.g. PROJ-123 - Export reports"}
           value={draft}
           onChange={(event) => setDraft(event.target.value)}
         />

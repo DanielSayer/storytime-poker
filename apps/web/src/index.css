@@ -1,1 +1,124 @@
 @import "@storytime-poker/ui/globals.css";
+
+@layer components {
+  .ticket-description {
+    overflow-wrap: anywhere;
+  }
+
+  .ticket-description > :first-child {
+    margin-top: 0;
+  }
+
+  .ticket-description > :last-child {
+    margin-bottom: 0;
+  }
+
+  .ticket-description p,
+  .ticket-description ul,
+  .ticket-description ol,
+  .ticket-description blockquote,
+  .ticket-description pre,
+  .ticket-description table {
+    margin-block: 0.75rem;
+  }
+
+  .ticket-description h1,
+  .ticket-description h2,
+  .ticket-description h3,
+  .ticket-description h4,
+  .ticket-description h5,
+  .ticket-description h6 {
+    margin-block: 1.1rem 0.4rem;
+    color: var(--foreground);
+    font-weight: 700;
+    line-height: 1.25;
+  }
+
+  .ticket-description h1,
+  .ticket-description h2 {
+    font-size: 1.15rem;
+  }
+
+  .ticket-description h3,
+  .ticket-description h4,
+  .ticket-description h5,
+  .ticket-description h6 {
+    font-size: 1rem;
+  }
+
+  .ticket-description ul,
+  .ticket-description ol {
+    padding-left: 1.4rem;
+  }
+
+  .ticket-description ul {
+    list-style: disc;
+  }
+
+  .ticket-description ol {
+    list-style: decimal;
+  }
+
+  .ticket-description li + li {
+    margin-top: 0.25rem;
+  }
+
+  .ticket-description a {
+    color: var(--primary);
+    font-weight: 700;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .ticket-description blockquote {
+    border-left: 3px solid color-mix(in srgb, var(--primary) 65%, transparent);
+    padding-left: 0.9rem;
+    color: color-mix(in srgb, var(--foreground) 72%, transparent);
+  }
+
+  .ticket-description code {
+    border-radius: 0.3rem;
+    background: color-mix(in srgb, var(--secondary) 65%, transparent);
+    padding: 0.1rem 0.3rem;
+    font-family:
+      ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 0.9em;
+  }
+
+  .ticket-description pre {
+    overflow-x: auto;
+    border: 1px solid color-mix(in srgb, var(--foreground) 20%, transparent);
+    border-radius: 0.6rem;
+    background: color-mix(in srgb, var(--secondary) 45%, transparent);
+    padding: 0.8rem;
+  }
+
+  .ticket-description pre code {
+    background: transparent;
+    padding: 0;
+  }
+
+  .ticket-description table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .ticket-description th,
+  .ticket-description td {
+    border: 1px solid color-mix(in srgb, var(--foreground) 22%, transparent);
+    padding: 0.45rem 0.6rem;
+    text-align: left;
+    vertical-align: top;
+  }
+
+  .ticket-description th {
+    background: color-mix(in srgb, var(--secondary) 55%, transparent);
+    color: var(--foreground);
+    font-weight: 700;
+  }
+
+  .ticket-description hr {
+    margin-block: 1rem;
+    border-color: color-mix(in srgb, var(--foreground) 18%, transparent);
+  }
+}

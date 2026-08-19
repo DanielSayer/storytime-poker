@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex" />
+    <title>Signing in to Storytime Poker</title>
+  </head>
+  <body>
+    <p>Finishing sign-in...</p>
+    <script type="module">
+      import { broadcastResponseToMainFrame } from "@azure/msal-browser/redirect-bridge";
+
+      broadcastResponseToMainFrame().catch(() => {
+        document.body.textContent =
+          "Sign-in could not be completed. Close this window and try again.";
+      });
+    </script>
+  </body>
+</html>
