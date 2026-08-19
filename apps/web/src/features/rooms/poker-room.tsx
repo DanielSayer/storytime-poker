@@ -102,7 +102,7 @@ export function PokerRoom({
   return (
     <main className="min-w-0 flex-1 overflow-x-auto bg-background font-[Trebuchet_MS,Comic_Sans_MS,cursive] text-foreground">
       <section
-        className="mx-auto mt-[18px] grid w-[calc(100vw-2rem)] min-w-[1040px] max-w-[1180px] grid-cols-[1.25fr_repeat(4,1fr)] overflow-hidden rounded-[20px_26px_18px_24px] border-2 border-foreground bg-card shadow-[5px_5px_0_rgb(74_53_32_/_35%)] dark:shadow-[5px_5px_0_rgb(0_0_0_/_35%)]"
+        className="mx-auto my-4.5 grid w-[calc(100vw-2rem)] min-w-260 max-w-295 grid-cols-[1.25fr_repeat(4,1fr)] overflow-hidden rounded-[20px_26px_18px_24px] border-2 border-foreground bg-card shadow-[5px_5px_0_rgb(74_53_32/35%)] dark:shadow-[5px_5px_0_rgb(0_0_0/35%)]"
         aria-label="Session status"
       >
         <button
@@ -138,7 +138,7 @@ export function PokerRoom({
         </div>
       </section>
 
-      <div className="mx-auto mb-6 flex w-[calc(100vw-2rem)] min-w-[1040px] max-w-[1180px] items-start gap-6">
+      <div className="mx-auto mb-6 flex w-[calc(100vw-2rem)] min-w-260 max-w-295 items-start gap-6">
         <PokerTable
           participants={room.participants}
           isVoting={isVoting}

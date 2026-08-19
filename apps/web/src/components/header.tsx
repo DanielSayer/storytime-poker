@@ -1,22 +1,30 @@
 import { Link } from "@tanstack/react-router";
 import { Spade } from "lucide-react";
 
-import { ModeToggle } from "./mode-toggle";
-
 export default function Header() {
   return (
-    <header className="border-b bg-background/80 backdrop-blur">
-      <div className="mx-auto flex h-14 w-full max-w-6xl items-center justify-between px-4 sm:px-6">
+    <header className="px-4 pt-4 sm:px-6 sm:pt-5">
+      <div className="mx-auto flex w-full max-w-5xl items-center">
         <Link
-          className="flex items-center gap-2 font-semibold tracking-tight"
+          aria-label="Storytime Poker home"
+          className="group inline-flex items-center gap-3 rounded-xl outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-4 focus-visible:ring-offset-background"
           to="/"
         >
-          <span className="flex size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-            <Spade className="size-4" />
+          <span aria-hidden="true" className="relative block size-11 shrink-0">
+            <span className="absolute inset-[3px] translate-x-1 rotate-6 rounded-[8px_10px_7px_9px] border-2 border-foreground bg-primary transition-transform group-hover:rotate-9" />
+            <span className="absolute inset-[3px] grid -rotate-3 place-items-center rounded-[8px_10px_7px_9px] border-2 border-foreground bg-card shadow-[2px_3px_0_rgb(74_53_32_/_30%)] transition-transform group-hover:-rotate-6">
+              <Spade className="size-5 fill-primary text-primary" />
+            </span>
           </span>
-          Storytime Poker
+          <span className="flex flex-col">
+            <span className="font-extrabold text-lg leading-none tracking-tight">
+              Storytime Poker
+            </span>
+            <span className="mt-1 font-semibold text-[11px] text-muted-foreground uppercase tracking-[0.16em]">
+              Estimate together
+            </span>
+          </span>
         </Link>
-        <ModeToggle />
       </div>
     </header>
   );

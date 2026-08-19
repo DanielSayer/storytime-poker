@@ -42,7 +42,8 @@ function RootComponent() {
         attribute="class"
         defaultTheme="light"
         disableTransitionOnChange
-        storageKey="vite-ui-theme"
+        enableSystem={false}
+        forcedTheme="light"
       >
         <div className="flex min-h-svh flex-col">
           <Header />
