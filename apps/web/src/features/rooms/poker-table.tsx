@@ -153,9 +153,14 @@ export function PokerTable({
           )}
           data-poker-table
         >
-          <div className="w-[min(320px,70%)] text-center">
+          <div className="flex w-[min(320px,70%)] flex-col items-center text-center">
             {story ? (
-              <TicketDetails id={String(story.id)} url={story.url} />
+              <>
+                <p className="mb-2 rounded-full bg-card/20 px-3 py-1 font-bold text-[9px] text-card uppercase tracking-[1.2px]">
+                  Current story
+                </p>
+                <TicketDetails id={String(story.id)} url={story.url} />
+              </>
             ) : (
               <RoundLabel
                 label={roundLabel}
@@ -163,18 +168,8 @@ export function PokerTable({
                 onSave={onSaveRoundLabel}
               />
             )}
-            <div
-              className={cn(
-                "mx-auto grid h-[88px] w-16 place-items-center rounded-lg border-2 border-foreground text-[26px] shadow-[3px_3px_0_rgb(74_53_32_/_40%)] dark:shadow-[3px_3px_0_rgb(0_0_0_/_40%)]",
-                story ? "mt-2" : "mt-3.5",
-                deckPatternClass,
-              )}
-              aria-hidden="true"
-            >
-              ?
-            </div>
             {summary ? (
-              <p className="mt-3 inline-block rounded-full bg-card/85 px-2.5 py-1 font-bold text-[11px]">
+              <p className="mt-3 rounded-full border border-card/30 bg-card/90 px-3 py-1 font-bold text-[11px] shadow-[1px_1px_0_rgb(74_53_32_/_20%)]">
                 {summary}
               </p>
             ) : null}

@@ -51,6 +51,7 @@ export function RoomSidePanel({
           cards={cards}
           selectedCard={selectedCard}
           disabled={!isVoting}
+          variant="rail"
           onSelect={onVote}
         />
       </aside>
